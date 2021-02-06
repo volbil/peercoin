@@ -44,33 +44,21 @@ const unsigned int nProtocolV09TestSwitchTime = 1581940800; // Mon 17 Feb 12:00:
 // Hard checkpoints of stake modifiers to ensure they are deterministic
 static std::map<int, unsigned int> mapStakeModifierCheckpoints =
     boost::assign::map_list_of
-    ( 0, 0x0e00670bu )
-    ( 19080, 0xad4e4d29u )
-    ( 30583, 0xdc7bf136u )
-    ( 99999, 0xf555cfd2u )
-    (219999, 0x91b7444du )
-    (336000, 0x6c3c8048u )
-    (371850, 0x9b850bdfu )
-    (407813, 0x46fe50b5u )
-    (443561, 0x114a6e38u )
-    (455470, 0x9b7af181u )
-    (479189, 0xe04fb8e0u )
+        ( 0, 0xfd11f4e7 )
+        ( 1, 0x2dcbe358)
+        ( 2, 0x4da80b60)
+        ( 20, 0xc376c28f)
+        ( 10000, 0xc05b3961)
+        ( 30000, 0xcc120e22)
+        ( 75000, 0x6d74f82d)
+        ( 100000, 0xf9c10444)
+        ( 125000, 0xf12bdec4)
+        ( 147500, 0x0ae61c00)
     ;
 
 static std::map<int, unsigned int> mapStakeModifierTestnetCheckpoints =
     boost::assign::map_list_of
-    ( 0, 0x0e00670bu )
-    ( 19080, 0x3711dc3au )
-    ( 30583, 0xb480fadeu )
-    ( 99999, 0x9a62eaecu )
-    (219999, 0xeafe96c3u )
-    (336000, 0x8330dc09u )
-    (372751, 0xafb94e2fu )
-    (382019, 0x7f5cf5ebu )
-    (408500, 0x68cadee2u )
-    (412691, 0x93138e67u )
-    (441667, 0x3303fc25u )
-    (444932, 0x4b8bf2e3u )
+        ( 0, 0xfd11f4e7 )
     ;
 
 // Whether the given coinstake is subject to new v0.3 protocol

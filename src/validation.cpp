@@ -904,64 +904,124 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     return true;
 }
 
-int64_t GetProofOfWorkReward(unsigned int nBits)
+int64_t GetProofOfWorkReward()
 {
-    CBigNum bnSubsidyLimit = MAX_MINT_PROOF_OF_WORK;
-    CBigNum bnTarget;
-    bnTarget.SetCompact(nBits);
-    CBigNum bnTargetLimit(Params().GetConsensus().powLimit);
-    bnTargetLimit.SetCompact(bnTargetLimit.GetCompact());
+    CBlockIndex* pindexPrev = chainActive.Tip();
+    int nHeight = chainActive.Tip()->nHeight + 1;
 
-    // peercoin: subsidy is cut in half every 16x multiply of difficulty
-    // A reasonably continuous curve is used to avoid shock to market
-    // (nSubsidyLimit / nSubsidy) ** 4 == bnProofOfWorkLimit / bnTarget
-    CBigNum bnLowerBound = CENT;
-    CBigNum bnUpperBound = bnSubsidyLimit;
-    while (bnLowerBound + CENT <= bnUpperBound)
-    {
-        CBigNum bnMidValue = (bnLowerBound + bnUpperBound) / 2;
-        if (gArgs.GetBoolArg("-printcreation", false))
-            LogPrintf("%s: lower=%lld upper=%lld mid=%lld\n", __func__, bnLowerBound.getuint64(), bnUpperBound.getuint64(), bnMidValue.getuint64());
-        if (bnMidValue * bnMidValue * bnMidValue * bnMidValue * bnTargetLimit > bnSubsidyLimit * bnSubsidyLimit * bnSubsidyLimit * bnSubsidyLimit * bnTarget)
-            bnUpperBound = bnMidValue;
-        else
-            bnLowerBound = bnMidValue;
+    int64_t nSubsidy = 0 * COIN;
+    
+    // SteepCoin ICO RESERVED ( Totally:500 millions)
+    if (nHeight == 1) {
+        nSubsidy = 100000000 * COIN; 
+    } else if(nHeight < 10)  {
+        nSubsidy = 50000000 * COIN;
+    } else if (nHeight < 500000) {
+        nSubsidy = 1 * COIN;
     }
-
-    int64_t nSubsidy = bnUpperBound.getuint64();
-    nSubsidy = (nSubsidy / CENT) * CENT;
-    if (gArgs.GetBoolArg("-printcreation", false))
-        LogPrintf("%s: create=%s nBits=0x%08x nSubsidy=%lld\n", __func__, FormatMoney(nSubsidy), nBits, nSubsidy);
-
-    return std::min(nSubsidy, MAX_MINT_PROOF_OF_WORK);
+    
+    return nSubsidy;
 }
 
-// peercoin: miner's coin stake is rewarded based on coin age spent (coin-days)
-int64_t GetProofOfStakeReward(int64_t nCoinAge, uint32_t nTime, uint64_t nMoneySupply)
+int64_t GetProofOfStakeReward()
 {
-    static int64_t nRewardCoinYear = CENT;  // creation amount per coin-year
-    int64_t nSubsidy = nCoinAge * 33 / (365 * 33 + 8) * nRewardCoinYear;
+    CBlockIndex* pindexPrev = chainActive.Tip();
+    int nHeight = chainActive.Tip()->nHeight + 1;
 
-    if (IsProtocolV09(nTime)) {
-        // rfc18
-        // YearlyBlocks = ((365 * 33 + 8) / 33) * 1440 / 10
-        // some efforts not to lose precision
-        CBigNum bnInflationAdjustment = nMoneySupply;
-        bnInflationAdjustment *= 25 * 33;
-        bnInflationAdjustment /= 10000 * 144;
-        bnInflationAdjustment /= (365 * 33 + 8);
+    int64_t nSubsidy = 0 * COIN;
 
-        uint64_t nInflationAdjustment = bnInflationAdjustment.getuint64();
-        uint64_t nSubsidyNew = (nSubsidy * 3) + nInflationAdjustment;
+    if (nHeight <= 2000) {
+        nSubsidy = 10 * COIN; 
+    } else if (nHeight <= 4000) {
+        nSubsidy = 20 * COIN;
+    } else if (nHeight <= 6000) {
+        nSubsidy = 500 * COIN;
+    } else if (nHeight <= 8000) {
+        nSubsidy = 1000 * COIN;
+    } else if (nHeight <= 10000) {
+        nSubsidy = 2500 * COIN;
+    } else if (nHeight <= 12000) {
+        nSubsidy = 5000 * COIN;
+    } else if(nHeight <= 14000) {
+        nSubsidy = 10000 * COIN;
+    } else if(nHeight <= 15000) {
+        nSubsidy = 15000 * COIN;
+    } else if(nHeight <= 16000) {
+        nSubsidy = 20000 * COIN;
+    } else if(nHeight <= 17000) {
+        nSubsidy = 25000 * COIN;
+    } else if(nHeight <= 18000) {
+        nSubsidy = 10000 * COIN;
+    } else if(nHeight <= 20000) {
+        nSubsidy = 5000 * COIN;
+    } else if(nHeight <= 40000) {
+        nSubsidy = 100 * COIN;
+    } else if(nHeight <= 42000) {
+        nSubsidy = 300 * COIN;
+    } else if(nHeight <= 44000) {
+        nSubsidy = 600 * COIN;
+    } else if(nHeight <= 45000) {
+        nSubsidy = 1000 * COIN;
+    } else if(nHeight <= 47000) {
+        nSubsidy = 3000 * COIN;
+    } else if(nHeight <= 48000) {
+        nSubsidy = 6000 * COIN;
+    } else if(nHeight <= 50000) {
+        nSubsidy = 10000 * COIN;
+    } else if(nHeight <= 55000) {
+        nSubsidy = 2000 * COIN;
+    } else if(nHeight <= 60000) {
+        nSubsidy = 1000 * COIN;
+    } else if(nHeight <= 70000) {
+        nSubsidy = 200 * COIN;
+    } else if(nHeight <= 80000) {
+        nSubsidy = 250 * COIN;
+    } else if(nHeight <= 81000) {
+        nSubsidy = 1000 * COIN;
+    } else if(nHeight <= 83000) {
+        nSubsidy = 3000 * COIN;
+    } else if(nHeight <= 84000) {
+        nSubsidy = 5000 * COIN;
+    } else if(nHeight <= 85000) {
+        nSubsidy = 10000 * COIN;
+    } else if(nHeight <= 90000) {
+        nSubsidy = 1000 * COIN;
+    } else if(nHeight <= 250000) {
+        nSubsidy = 100 * COIN;
+    } else if(nHeight <= 251000) {
+        nSubsidy = 1000 * COIN;
+    } else if(nHeight <= 252000) {
+        nSubsidy = 10000 * COIN;
+    } else if(nHeight <= 253000) {
+        nSubsidy = 1000 * COIN;
+    } else if(nHeight <= 300000) {
+        nSubsidy = 100 * COIN;
+    } else if(nHeight <= 310000) {
+        nSubsidy = 2500 * COIN;
+    } else if(nHeight <= 350000) {
+        nSubsidy = 100 * COIN;
+    } else if(nHeight <= 360000) {
+        nSubsidy = 2500 * COIN;
+    } else if(nHeight <= 530000) {
+        nSubsidy = 50 * COIN;
+    } else if(nHeight <= 531000) {
+        nSubsidy = 500 * COIN;
+    } else if(nHeight <= 532000) {
+        nSubsidy = 5000 * COIN;
+    } else if(nHeight <= 533000) {
+        nSubsidy = 500 * COIN;
+    } else if(nHeight <= 580000) {
+        nSubsidy = 50 * COIN;
+    } else if(nHeight <= 590000) {
+        nSubsidy = 1500 * COIN;
+    } else if(nHeight <= 630000) {
+        nSubsidy = 50 * COIN;
+    } else if(nHeight <= 631000) {
+        nSubsidy = 1500 * COIN;
+    } else if(nHeight >= 631000) {
+        nSubsidy = 10 * COIN;
+    }
 
-        if (gArgs.GetBoolArg("-printcreation", false))
-            LogPrintf("%s: money supply %ld, inflation adjustment %f, old subsidy %ld, new subsidy %ld\n", __func__, nMoneySupply, nInflationAdjustment/1000000.0, nSubsidy, nSubsidyNew);
-
-        nSubsidy = nSubsidyNew;
-        }
-
-    if (gArgs.GetBoolArg("-printcreation", false))
-        LogPrintf("%s: create=%s nCoinAge=%lld\n", __func__, FormatMoney(nSubsidy), nCoinAge);
     return nSubsidy;
 }
 
@@ -2870,13 +2930,15 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
 
     // Check coinbase reward
     CAmount nCoinbaseCost = 0;
-    if (block.IsProofOfWork())
+    if (block.IsProofOfWork()) {
         nCoinbaseCost = (GetMinFee(*block.vtx[0]) < PERKB_TX_FEE)? 0 : (GetMinFee(*block.vtx[0]) - PERKB_TX_FEE);
-    if (block.vtx[0]->GetValueOut() > (block.IsProofOfWork()? (GetProofOfWorkReward(block.nBits) - nCoinbaseCost) : 0))
+    }
+
+    if (block.vtx[0]->GetValueOut() > (block.IsProofOfWork() ? (GetProofOfWorkReward() - nCoinbaseCost) : 0))
         return state.DoS(50, false, REJECT_INVALID, "bad-cb-amount", false,
                 strprintf("CheckBlock() : coinbase reward exceeded %s > %s",
                    FormatMoney(block.vtx[0]->GetValueOut()),
-                   FormatMoney(block.IsProofOfWork()? GetProofOfWorkReward(block.nBits) : 0)));
+                   FormatMoney(block.IsProofOfWork() ? GetProofOfWorkReward() : 0)));
 
     // Check transactions
     for (const auto& tx : block.vtx)

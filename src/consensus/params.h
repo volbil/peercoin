@@ -41,6 +41,7 @@ struct Params {
     uint32_t nMinerConfirmationWindow;
     /** Proof of work parameters */
     uint256 powLimit;
+    uint256 posLimit;
     bool fPowAllowMinDifficultyBlocks;
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;

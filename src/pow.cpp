@@ -24,42 +24,33 @@ const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfSta
 
 unsigned int GetNextTargetRequired(const CBlockIndex* pindexLast, bool fProofOfStake, const Consensus::Params& params)
 {
+    uint256 limit = fProofOfStake ? params.powLimit : params.posLimit;
+
     if (pindexLast == nullptr)
-        return UintToArith256(params.powLimit).GetCompact(); // genesis block
+        return UintToArith256(limit).GetCompact(); // genesis block
 
     const CBlockIndex* pindexPrev = GetLastBlockIndex(pindexLast, fProofOfStake);
     if (pindexPrev->pprev == nullptr)
-        return UintToArith256(params.bnInitialHashTarget).GetCompact(); // first block
+        return UintToArith256(limit).GetCompact(); // first block
+
     const CBlockIndex* pindexPrevPrev = GetLastBlockIndex(pindexPrev->pprev, fProofOfStake);
     if (pindexPrevPrev->pprev == nullptr)
-        return UintToArith256(params.bnInitialHashTarget).GetCompact(); // second block
+        return UintToArith256(limit).GetCompact(); // second block
 
     int64_t nActualSpacing = pindexPrev->GetBlockTime() - pindexPrevPrev->GetBlockTime();
+    if (nActualSpacing < 0)
+        nActualSpacing = params.nStakeTargetSpacing;
 
-    // peercoin: target change every block
-    // peercoin: retarget with exponential moving toward target spacing
+    // ppcoin: target change every block
+    // ppcoin: retarget with exponential moving toward target spacing
     CBigNum bnNew;
     bnNew.SetCompact(pindexPrev->nBits);
-    if (Params().NetworkIDString() != CBaseChainParams::REGTEST) {
-        int64_t nTargetSpacing;
+    int64_t nInterval = params.nTargetTimespan / params.nStakeTargetSpacing;
+    bnNew *= ((nInterval - 1) * params.nStakeTargetSpacing + nActualSpacing + nActualSpacing);
+    bnNew /= ((nInterval + 1) * params.nStakeTargetSpacing);
 
-        if (fProofOfStake) {
-            nTargetSpacing = params.nStakeTargetSpacing;
-        } else {
-            if (IsProtocolV09(pindexLast->nTime)) {
-                nTargetSpacing = params.nStakeTargetSpacing * 6;
-            } else {
-                nTargetSpacing = std::min(params.nTargetSpacingWorkMax, params.nStakeTargetSpacing * (1 + pindexLast->nHeight - pindexPrev->nHeight));
-            }
-        }
-
-        int64_t nInterval = params.nTargetTimespan / nTargetSpacing;
-        bnNew *= ((nInterval - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
-        bnNew /= ((nInterval + 1) * nTargetSpacing);
-        }
-
-    if (bnNew > CBigNum(params.powLimit))
-        bnNew = CBigNum(params.powLimit);
+    if (bnNew <= 0 || bnNew > CBigNum(limit))
+        bnNew = CBigNum(limit);
 
     return bnNew.GetCompact();
 }
