@@ -255,7 +255,7 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
             return state.DoS(100, false, REJECT_INVALID, "unable to get coin age for coinstake");
         CAmount nStakeReward = tx.GetValueOut() - nValueIn;
         CAmount nCoinstakeCost = (GetMinFee(tx) < PERKB_TX_FEE) ? 0 : (GetMinFee(tx) - PERKB_TX_FEE);
-        if (nMoneySupply && nStakeReward > GetProofOfStakeReward() - nCoinstakeCost)
+        if (nMoneySupply && nStakeReward > GetProofOfStakeReward(chainActive.Height() + 1) - nCoinstakeCost)
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-coinstake-too-large");
     } else {
         const CAmount value_out = tx.GetValueOut();

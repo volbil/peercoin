@@ -4245,6 +4245,8 @@ CTxDestination CWallet::AddAndGetDestinationForScript(const CScript& script, Out
 typedef std::vector<unsigned char> valtype;
 bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CMutableTransaction& txNew)
 {
+    CBlockIndex* pindexPrev = chainActive.Tip();
+
     // The following split & combine thresholds are important to security
     // Should not be adjusted if you don't understand the consequences
     static unsigned int nStakeSplitAge = (60 * 60 * 24 * 90);
@@ -4419,11 +4421,13 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if (!GetCoinAge(txNew, view, nCoinAge))
             return error("CreateCoinStake : failed to calculate coin age");
 
-        CAmount nReward = GetProofOfStakeReward();
+        CAmount nReward = GetProofOfStakeReward(pindexPrev->nHeight + 1);
+
         // Refuse to create mint that has zero or negative reward
         if(nReward <= 0) {
           return false;
         }
+
         nCredit += nReward;
     }
 

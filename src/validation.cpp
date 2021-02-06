@@ -904,11 +904,8 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
     return true;
 }
 
-int64_t GetProofOfWorkReward()
+int64_t GetProofOfWorkReward(int nHeight)
 {
-    CBlockIndex* pindexPrev = chainActive.Tip();
-    int nHeight = chainActive.Tip()->nHeight + 1;
-
     int64_t nSubsidy = 0 * COIN;
     
     // SteepCoin ICO RESERVED ( Totally:500 millions)
@@ -923,11 +920,8 @@ int64_t GetProofOfWorkReward()
     return nSubsidy;
 }
 
-int64_t GetProofOfStakeReward()
+int64_t GetProofOfStakeReward(int nHeight)
 {
-    CBlockIndex* pindexPrev = chainActive.Tip();
-    int nHeight = chainActive.Tip()->nHeight + 1;
-
     int64_t nSubsidy = 0 * COIN;
 
     if (nHeight <= 2000) {
@@ -2934,11 +2928,11 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
         nCoinbaseCost = (GetMinFee(*block.vtx[0]) < PERKB_TX_FEE)? 0 : (GetMinFee(*block.vtx[0]) - PERKB_TX_FEE);
     }
 
-    if (block.vtx[0]->GetValueOut() > (block.IsProofOfWork() ? (GetProofOfWorkReward() - nCoinbaseCost) : 0))
+    if (block.vtx[0]->GetValueOut() > (block.IsProofOfWork() ? (GetProofOfWorkReward(chainActive.Height() + 1) - nCoinbaseCost) : 0))
         return state.DoS(50, false, REJECT_INVALID, "bad-cb-amount", false,
                 strprintf("CheckBlock() : coinbase reward exceeded %s > %s",
                    FormatMoney(block.vtx[0]->GetValueOut()),
-                   FormatMoney(block.IsProofOfWork() ? GetProofOfWorkReward() : 0)));
+                   FormatMoney(block.IsProofOfWork() ? GetProofOfWorkReward(chainActive.Height() + 1) : 0)));
 
     // Check transactions
     for (const auto& tx : block.vtx)
