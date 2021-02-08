@@ -7,13 +7,15 @@
 #define BITCOIN_AMOUNT_H
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <string>
+#include <limits>
 
 /** Amount in satoshis (Can be negative) */
 typedef int64_t CAmount;
 
-static const CAmount COIN = 1000000;
-static const CAmount CENT = 10000;
+static const CAmount COIN = 100000000;
+static const CAmount CENT = 1000000;
 
 static const CAmount MIN_TX_FEE_PREV7 = CENT;
 static const CAmount MIN_TX_FEE = CENT / 10;

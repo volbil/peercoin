@@ -911,7 +911,7 @@ int64_t GetProofOfWorkReward(int nHeight)
     // SteepCoin ICO RESERVED ( Totally:500 millions)
     if (nHeight == 1) {
         nSubsidy = 100000000 * COIN; 
-    } else if(nHeight < 10)  {
+    } else if (nHeight < 10)  {
         nSubsidy = 50000000 * COIN;
     } else if (nHeight < 500000) {
         nSubsidy = 1 * COIN;
@@ -4618,12 +4618,17 @@ bool CheckBlockSignature(const CBlock& block)
     if (block.GetHash() == Params().GetConsensus().hashGenesisBlock)
         return block.vchBlockSig.empty();
 
+    if (block.IsProofOfWork())
+        return block.vchBlockSig.empty();
+
     std::vector<valtype> vSolutions;
     txnouttype whichType;
-    const CTxOut& txout = block.IsProofOfStake()? block.vtx[1]->vout[1] : block.vtx[0]->vout[0];
+
+    const CTxOut& txout = block.IsProofOfStake() ? block.vtx[1]->vout[1] : block.vtx[0]->vout[0];
 
     if (!Solver(txout.scriptPubKey, whichType, vSolutions))
         return false;
+
     if (whichType == TX_PUBKEY)
     {
         const valtype& vchPubKey = vSolutions[0];
@@ -4632,5 +4637,6 @@ bool CheckBlockSignature(const CBlock& block)
             return false;
         return key.Verify(block.GetHash(), block.vchBlockSig);
     }
+
     return false;
 }
