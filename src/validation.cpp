@@ -1793,6 +1793,7 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
 
     std::vector<int> prevheights;
     CAmount nFees = 0;
+    CAmount nActualStakeReward = 0;
     int64_t nValueIn = 0;
     int64_t nValueOut = 0;
     int nInputs = 0;
@@ -1846,6 +1847,10 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
             return state.DoS(100, error("ConnectBlock(): too many sigops"),
                              REJECT_INVALID, "bad-blk-sigops");
 
+        if (tx.IsCoinStake()) {             
+            nActualStakeReward = tx.GetValueOut() - view.GetValueIn(tx);
+        }
+
         txdata.emplace_back(tx);
         if (!tx.IsCoinBase())
         {
@@ -1866,7 +1871,26 @@ bool CChainState::ConnectBlock(const CBlock& block, CValidationState& state, CBl
     int64_t nTime3 = GetTimeMicros(); nTimeConnect += nTime3 - nTime2;
     LogPrint(BCLog::BENCH, "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs (%.2fms/blk)]\n", (unsigned)block.vtx.size(), MILLI * (nTime3 - nTime2), MILLI * (nTime3 - nTime2) / block.vtx.size(), nInputs <= 1 ? 0 : MILLI * (nTime3 - nTime2) / (nInputs-1), nTimeConnect * MICRO, nTimeConnect * MILLI / nBlocksTotal);
 
-    // peercoin: coinbase reward check relocated to CheckBlock()
+    if (block.IsProofOfWork())
+    {
+        CAmount blockReward = nFees + GetProofOfWorkReward(pindex->nHeight);
+        if (block.vtx[0]->GetValueOut() > blockReward)
+            return state.DoS(100,
+                     error("ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)",
+                           block.vtx[0]->GetValueOut(), blockReward),
+                           REJECT_INVALID, "bad-cb-amount");
+
+    }
+
+    if (block.IsProofOfStake())
+    {
+        CAmount blockReward = nFees + GetProofOfStakeReward(pindex->nHeight);
+        if (nActualStakeReward > blockReward)
+            return state.DoS(100,
+                     error("ConnectBlock(): coinstake pays too much (actual=%d vs limit=%d)",
+                           nActualStakeReward, blockReward),
+                           REJECT_INVALID, "bad-cs-amount");
+    }
 
     if (!control.Wait())
         return state.DoS(100, error("%s: CheckQueue failed", __func__), REJECT_INVALID, "block-validation-failed");
@@ -2921,18 +2945,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, const Consensus::P
     // Check coinstake timestamp
     if (block.IsProofOfStake() && !CheckCoinStakeTimestamp(block.GetBlockTime(), (int64_t)block.vtx[1]->nTime))
         return state.DoS(50, false, REJECT_INVALID, "bad-cs-time", false, "coinstake timestamp violation");
-
-    // Check coinbase reward
-    CAmount nCoinbaseCost = 0;
-    if (block.IsProofOfWork()) {
-        nCoinbaseCost = (GetMinFee(*block.vtx[0]) < PERKB_TX_FEE)? 0 : (GetMinFee(*block.vtx[0]) - PERKB_TX_FEE);
-    }
-
-    if (block.vtx[0]->GetValueOut() > (block.IsProofOfWork() ? (GetProofOfWorkReward(chainActive.Height() + 1) - nCoinbaseCost) : 0))
-        return state.DoS(50, false, REJECT_INVALID, "bad-cb-amount", false,
-                strprintf("CheckBlock() : coinbase reward exceeded %s > %s",
-                   FormatMoney(block.vtx[0]->GetValueOut()),
-                   FormatMoney(block.IsProofOfWork() ? GetProofOfWorkReward(chainActive.Height() + 1) : 0)));
 
     // Check transactions
     for (const auto& tx : block.vtx)

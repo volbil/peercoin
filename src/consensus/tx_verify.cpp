@@ -178,9 +178,9 @@ bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fChe
             return state.DoS(100, false, REJECT_INVALID, "empty-txout");
         // peercoin: enforce minimum output amount
         // v0.5 protocol: zero amount allowed
-        if ((!txout.IsEmpty()) && txout.nValue < MIN_TXOUT_AMOUNT &&
-            !(IsProtocolV05(tx.nTime) && (txout.nValue == 0)))
-            return state.DoS(100, false, REJECT_INVALID, "txout.nValue below minimum");
+        // if ((!txout.IsEmpty()) && txout.nValue < MIN_TXOUT_AMOUNT &&
+        //     !(IsProtocolV05(tx.nTime) && (txout.nValue == 0)))
+        //     return state.DoS(100, false, REJECT_INVALID, "txout.nValue below minimum");
         if (txout.nValue < 0)
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-vout-negative");
         if (txout.nValue > MAX_MONEY)
@@ -253,10 +253,10 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
         uint64_t nCoinAge;
         if (!GetCoinAge(tx, inputs, nCoinAge))
             return state.DoS(100, false, REJECT_INVALID, "unable to get coin age for coinstake");
-        CAmount nStakeReward = tx.GetValueOut() - nValueIn;
-        CAmount nCoinstakeCost = (GetMinFee(tx) < PERKB_TX_FEE) ? 0 : (GetMinFee(tx) - PERKB_TX_FEE);
-        if (nMoneySupply && nStakeReward > GetProofOfStakeReward(chainActive.Height() + 1) - nCoinstakeCost)
-            return state.DoS(100, false, REJECT_INVALID, "bad-txns-coinstake-too-large");
+        // CAmount nStakeReward = tx.GetValueOut() - nValueIn;
+        // CAmount nCoinstakeCost = (GetMinFee(tx) < PERKB_TX_FEE) ? 0 : (GetMinFee(tx) - PERKB_TX_FEE);
+        // if (nMoneySupply && nStakeReward > GetProofOfStakeReward(chainActive.Height() + 1) - nCoinstakeCost)
+        //     return state.DoS(100, false, REJECT_INVALID, "bad-txns-coinstake-too-large");
     } else {
         const CAmount value_out = tx.GetValueOut();
         if (nValueIn < value_out) {
@@ -268,9 +268,11 @@ bool Consensus::CheckTxInputs(const CTransaction& tx, CValidationState& state, c
         if (!MoneyRange(txfee_aux)) {
             return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-outofrange");
         }
+
         // peercoin: enforce transaction fees for every block
-        if (txfee_aux < GetMinFee(tx))
-            return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-not-enough");
+        // if (txfee_aux < GetMinFee(tx))
+        //     return state.DoS(100, false, REJECT_INVALID, "bad-txns-fee-not-enough");
+
         txfee = txfee_aux;
     }
     return true;

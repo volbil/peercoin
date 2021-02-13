@@ -81,10 +81,10 @@ public:
         consensus.nStakeTargetSpacing = 1 * 120; // 10-minute block spacing
         consensus.nTargetSpacingWorkMax = 12 * consensus.nStakeTargetSpacing; // 2-hour
         consensus.nPowTargetSpacing = consensus.nStakeTargetSpacing;
-        consensus.nStakeMinAge = 60 * 60 * 24 * 30; // minimum age for coin age
-        consensus.nStakeMaxAge = 60 * 60 * 24 * 90;
-        consensus.nModifierInterval = 6 * 60 * 60; // Modifier interval: time to elapse before new modifier is computed
-        consensus.nCoinbaseMaturity = 500;
+        consensus.nStakeMinAge = 60 * 60 * 4; // 4 houres
+        consensus.nStakeMaxAge = 60 * 60 * 24 * 30; // 30 days
+        consensus.nModifierInterval = 10 * 60; // Time to elapse before new modifier is computed
+        consensus.nCoinbaseMaturity = 10;
 
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
