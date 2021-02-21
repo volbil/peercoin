@@ -3376,11 +3376,11 @@ bool CChainState::AcceptBlock(const std::shared_ptr<const CBlock>& pblock, CVali
     }
 
     // peercoin: check PoS
-    if (fCheckPoS && !PeercoinContextualBlockChecks(block, state, pindex, false)) {
-        pindex->nStatus |= BLOCK_FAILED_VALID;
-        setDirtyBlockIndex.insert(pindex);
-        return state.DoS(100, false, REJECT_INVALID, "bad-pos", false, "proof of stake is incorrect");
-    }
+    // if (fCheckPoS && !PeercoinContextualBlockChecks(block, state, pindex, false)) {
+    //     pindex->nStatus |= BLOCK_FAILED_VALID;
+    //     setDirtyBlockIndex.insert(pindex);
+    //     return state.DoS(100, false, REJECT_INVALID, "bad-pos", false, "proof of stake is incorrect");
+    // }
 
     // Header is valid/has work, merkle tree and segwit merkle tree are good...RELAY NOW
     // (but if it does not build on our best tip, let the SendMessages loop relay it)

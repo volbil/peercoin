@@ -79,7 +79,6 @@ public:
 
         consensus.nTargetTimespan = 60 * 60;  // 60m
         consensus.nStakeTargetSpacing = 1 * 120; // 10-minute block spacing
-        consensus.nTargetSpacingWorkMax = 12 * consensus.nStakeTargetSpacing; // 2-hour
         consensus.nPowTargetSpacing = consensus.nStakeTargetSpacing;
         consensus.nStakeMinAge = 60 * 60 * 4; // 4 houres
         consensus.nStakeMaxAge = 60 * 60 * 24 * 30; // 30 days
@@ -171,7 +170,6 @@ public:
 
         consensus.nTargetTimespan = 7 * 24 * 60 * 60;  // one week
         consensus.nStakeTargetSpacing = 10 * 60;  // 10-minute block spacing
-        consensus.nTargetSpacingWorkMax = 12 * consensus.nStakeTargetSpacing; // 2-hour
         consensus.nPowTargetSpacing = consensus.nStakeTargetSpacing;
         consensus.nStakeMinAge = 60 * 60 * 24; // test net min age is 1 day
         consensus.nStakeMaxAge = 60 * 60 * 24 * 90;
@@ -271,7 +269,6 @@ public:
 
         consensus.nTargetTimespan = 7 * 24 * 60 * 60; // two weeks
         consensus.nStakeTargetSpacing = 10 * 60; // 10-minute block spacing
-        consensus.nTargetSpacingWorkMax = 12 * consensus.nStakeTargetSpacing; // 2-hour
         consensus.nPowTargetSpacing = consensus.nStakeTargetSpacing;
 
         consensus.nStakeMinAge = 60 * 60 * 24; // test net min age is 1 day

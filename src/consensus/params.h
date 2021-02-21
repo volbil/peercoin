@@ -51,7 +51,6 @@ struct Params {
     /** peercoin stuff */
     uint256 bnInitialHashTarget;
     int64_t nStakeTargetSpacing;
-    int64_t nTargetSpacingWorkMax;
     int64_t nTargetTimespan;
     int64_t nStakeMinAge;
     int64_t nStakeMaxAge;
