@@ -105,7 +105,7 @@ void WalletTxToJSON(const CWalletTx& wtx, UniValue& entry)
     for (const uint256& conflict : wtx.GetConflicts())
         conflicts.push_back(conflict.GetHex());
     entry.push_back(Pair("walletconflicts", conflicts));
-    entry.push_back(Pair("time", wtx.GetTxTime()));
+    entry.push_back(Pair("txtime", wtx.GetTxTime()));
     entry.push_back(Pair("timereceived", (int64_t)wtx.nTimeReceived));
 
     for (const std::pair<std::string, std::string>& item : wtx.mapValue)
