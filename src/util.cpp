@@ -594,7 +594,7 @@ fs::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/Peercoin";
+    return pathRet / ".peercoin";
 #else
     // Unix
     return pathRet / ".peercoin";
