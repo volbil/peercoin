@@ -441,10 +441,8 @@ bool CheckStakeKernelHash(unsigned int nBits, CBlockIndex* pindexPrev, const CBl
     }
 
     // Now check if proof-of-stake hash meets target protocol
-    if (CBigNum(hashProofOfStake) > bnCoinDayWeight * bnTargetPerCoinDay) {
-        std::cout << "TEST1\n\n";
+    if (CBigNum(hashProofOfStake) > bnCoinDayWeight * bnTargetPerCoinDay)
         return false;
-    }
 
     if (gArgs.GetBoolArg("-debug", false) && !fPrintProofOfStake)
     {
