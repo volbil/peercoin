@@ -70,50 +70,56 @@ bool IsProtocolV03(unsigned int nTimeCoinStake)
 // Whether the given block is subject to new v0.4 protocol
 bool IsProtocolV04(unsigned int nTimeBlock)
 {
-    return (nTimeBlock >= (Params().NetworkIDString() != CBaseChainParams::MAIN ? nProtocolV04TestSwitchTime : nProtocolV04SwitchTime));
+    // return (nTimeBlock >= (Params().NetworkIDString() != CBaseChainParams::MAIN ? nProtocolV04TestSwitchTime : nProtocolV04SwitchTime));
+    return false;
 }
 
 // Whether the given transaction is subject to new v0.5 protocol
 bool IsProtocolV05(unsigned int nTimeTx)
 {
-    return (nTimeTx >= (Params().NetworkIDString() != CBaseChainParams::MAIN ? nProtocolV05TestSwitchTime : nProtocolV05SwitchTime));
+    // return (nTimeTx >= (Params().NetworkIDString() != CBaseChainParams::MAIN ? nProtocolV05TestSwitchTime : nProtocolV05SwitchTime));
+    return false;
 }
 
 // Whether a given block is subject to new v0.6 protocol
 // Test against previous block index! (always available)
 bool IsProtocolV06(const CBlockIndex* pindexPrev)
 {
-  if (pindexPrev->nTime < (Params().NetworkIDString() != CBaseChainParams::MAIN ? nProtocolV06TestSwitchTime : nProtocolV06SwitchTime))
+  // if (pindexPrev->nTime < (Params().NetworkIDString() != CBaseChainParams::MAIN ? nProtocolV06TestSwitchTime : nProtocolV06SwitchTime))
+  //   return false;
+
+  // // if 900 of the last 1,000 blocks are version 2 or greater (90/100 if testnet):
+  // // Soft-forking PoS can be dangerous if the super majority is too low
+  // // The stake majority will decrease after the fork
+  // // since only coindays of updated nodes will get destroyed.
+  // if ((Params().NetworkIDString() == CBaseChainParams::MAIN && IsSuperMajority(2, pindexPrev, 900, 1000)) ||
+  //     (Params().NetworkIDString() != CBaseChainParams::MAIN && IsSuperMajority(2, pindexPrev, 90, 100)))
+  //   return true;
+
+  // return false;
     return false;
-
-  // if 900 of the last 1,000 blocks are version 2 or greater (90/100 if testnet):
-  // Soft-forking PoS can be dangerous if the super majority is too low
-  // The stake majority will decrease after the fork
-  // since only coindays of updated nodes will get destroyed.
-  if ((Params().NetworkIDString() == CBaseChainParams::MAIN && IsSuperMajority(2, pindexPrev, 900, 1000)) ||
-      (Params().NetworkIDString() != CBaseChainParams::MAIN && IsSuperMajority(2, pindexPrev, 90, 100)))
-    return true;
-
-  return false;
 }
 
 // Whether a given transaction is subject to new v0.7 protocol
 bool IsProtocolV07(unsigned int nTimeTx)
 {
-    bool fTestNet = Params().NetworkIDString() != CBaseChainParams::MAIN;
-    return (nTimeTx >= (fTestNet? nProtocolV07TestSwitchTime : nProtocolV07SwitchTime));
+    // bool fTestNet = Params().NetworkIDString() != CBaseChainParams::MAIN;
+    // return (nTimeTx >= (fTestNet? nProtocolV07TestSwitchTime : nProtocolV07SwitchTime));
+    return false;
 }
 
 bool IsBTC16BIPsEnabled(uint32_t nTimeTx)
 {
-    bool fTestNet = Params().NetworkIDString() != CBaseChainParams::MAIN;
-    return (nTimeTx >= (fTestNet? nBTC16BIPsTestSwitchTime : nBTC16BIPsSwitchTime));
+    // bool fTestNet = Params().NetworkIDString() != CBaseChainParams::MAIN;
+    // return (nTimeTx >= (fTestNet? nBTC16BIPsTestSwitchTime : nBTC16BIPsSwitchTime));
+    return false;
 }
 
 // Whether a given timestamp is subject to new v0.9 protocol
 bool IsProtocolV09(unsigned int nTime)
 {
-  return (nTime >= (Params().NetworkIDString() != CBaseChainParams::MAIN ? nProtocolV09TestSwitchTime : nProtocolV09SwitchTime));
+  // return (nTime >= (Params().NetworkIDString() != CBaseChainParams::MAIN ? nProtocolV09TestSwitchTime : nProtocolV09SwitchTime));
+    return false;
 }
 
 // Get the last stake modifier and its generation time from a given block
@@ -567,22 +573,11 @@ bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned int nRe
 unsigned int GetStakeEntropyBit(const CBlock& block)
 {
     unsigned int nEntropyBit = 0;
-    if (IsProtocolV04(block.nTime))
-    {
-        nEntropyBit = UintToArith256(block.GetHash()).GetLow64() & 1llu;// last bit of block hash
-        if (gArgs.GetBoolArg("-printstakemodifier", false))
-            LogPrintf("GetStakeEntropyBit(v0.4+): nTime=%u hashBlock=%s entropybit=%d\n", block.nTime, block.GetHash().ToString(), nEntropyBit);
-    }
-    else
-    {
-        // old protocol for entropy bit pre v0.4
-        uint160 hashSig = Hash160(block.vchBlockSig);
-        if (gArgs.GetBoolArg("-printstakemodifier", false))
-            LogPrintf("GetStakeEntropyBit(v0.3): nTime=%u hashSig=%s", block.nTime, hashSig.ToString());
-        nEntropyBit = hashSig.GetDataPtr()[4] >> 31;  // take the first bit of the hash
-        if (gArgs.GetBoolArg("-printstakemodifier", false))
-            LogPrintf(" entropybit=%d\n", nEntropyBit);
-    }
+
+    nEntropyBit = UintToArith256(block.GetHash()).GetLow64() & 1llu;// last bit of block hash
+    if (gArgs.GetBoolArg("-printstakemodifier", false))
+        LogPrintf("GetStakeEntropyBit(v0.4+): nTime=%u hashBlock=%s entropybit=%d\n", block.nTime, block.GetHash().ToString(), nEntropyBit);
+
     return nEntropyBit;
 }
 
