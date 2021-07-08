@@ -78,7 +78,7 @@ public:
         consensus.bnInitialHashTarget = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 40;
 
         consensus.nTargetTimespan = 60 * 60;  // 60m
-        consensus.nStakeTargetSpacing = 1 * 120; // 10-minute block spacing
+        consensus.nStakeTargetSpacing = 1 * 120; // 2-minute block spacing
         consensus.nPowTargetSpacing = consensus.nStakeTargetSpacing;
         consensus.nStakeMinAge = 60 * 60 * 4; // 4 houres
         consensus.nStakeMaxAge = 60 * 60 * 24 * 30; // 30 days
@@ -91,10 +91,10 @@ public:
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000002a0fac8b39f476"); // 350000
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000"); // 0
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0xa3a0ffa0dbca75923ad6a53d3878d62f8b35c363282df3f13ded9e4fda921e63");  // 380000
+        consensus.defaultAssumeValid = uint256S("0xa3a0ffa0dbca75923ad6a53d3878d62f8b35c363282df3f13ded9e4fda921e63");  // 100000
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -105,7 +105,7 @@ public:
         pchMessageStart[1] = 0xe5;
         pchMessageStart[2] = 0xe2;
         pchMessageStart[3] = 0xe8;
-        vAlertPubKey = ParseHex("04201f0f85178950503c20d5a947883dff81e727533f1f1da104755fa25275cf68c442b8ad50da3152c10a74ea621da614d3d2048ba25a14f39bfc40c41223543a");
+        vAlertPubKey = ParseHex("047dfe2e5ab04879214df9250252240c6e378096dc6f4d6feb1b27ad48250628bdf8f1e0626df718f8fb02b5639b230a358011356f7ecf9f0c678d3ac674468e26");
         nDefaultPort = 36468;
         nPruneAfterHeight = 100000;
 
