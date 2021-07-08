@@ -72,7 +72,7 @@ public:
         strNetworkID = "main";
         consensus.BIP16Height = 0;
         consensus.BIP34Height = 339994;
-        consensus.BIP34Hash = uint256S("000000000000000237f50af4cfe8924e8693abc5bd8ae5abb95bc6d230f5953f");
+        consensus.BIP34Hash = uint256S("0xadc7819d21f3c444f446b898a7a627f7be673f258252a7a58402afa1fd2b4efd");
         consensus.powLimit =            uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 32;
         consensus.posLimit =            uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 32;
         consensus.bnInitialHashTarget = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 40;
