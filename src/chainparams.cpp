@@ -72,7 +72,7 @@ public:
         strNetworkID = "main";
         consensus.BIP16Height = 0;
         consensus.BIP34Height = 339994;
-        consensus.BIP34Hash = uint256S("000000000000000237f50af4cfe8924e8693abc5bd8ae5abb95bc6d230f5953f");
+        consensus.BIP34Hash = uint256S("0xadc7819d21f3c444f446b898a7a627f7be673f258252a7a58402afa1fd2b4efd");
         consensus.powLimit =            uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 32;
         consensus.posLimit =            uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 32;
         consensus.bnInitialHashTarget = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 40;
@@ -91,10 +91,10 @@ public:
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000000002a0fac8b39f476"); // 350000
+        consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000000000000"); // 350000
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0xa3a0ffa0dbca75923ad6a53d3878d62f8b35c363282df3f13ded9e4fda921e63");  // 380000
+        consensus.defaultAssumeValid = uint256S("0x8c577e2f69f3fcb45a5bb79b642918b75f293b06337cd5ac3cb22d7f0b9856a8");  // 380000
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
@@ -119,20 +119,21 @@ public:
         // This is fine at runtime as we'll fall back to using them as a oneshot if they dont support the
         // service bits we want, but we should get them updated to support all service bits wanted by any
         // release ASAP to avoid it where possible.
-        // vSeeds.emplace_back("seed.peercoin.net");
-        // vSeeds.emplace_back("seed2.peercoin.net");
-        // vSeeds.emplace_back("seed.peercoin-library.org");
-        // vSeeds.emplace_back("ppcseed.ns.7server.net");
-        // vSeeds.emplace_back("seed.ppcoin.info");
+        vSeeds.emplace_back("45.156.22.16");
+        vSeeds.emplace_back("45.156.23.39");
+         vSeeds.emplace_back("91.239.69.78");
+         vSeeds.emplace_back("45.155.207.187");
+         vSeeds.emplace_back("37.235.144.35");
+         vSeeds.emplace_back("37.235.144.15");
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,55);  // peercoin: addresses begin with 'P'
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,117); // peercoin: addresses begin with 'p'
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,183);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,125);  // steepcoin: addresses begin with 'P'
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,63); // steepcoin: addresses begin with 'p'
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,128);
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
 
         // human readable prefix to bench32 address
-        bech32_hrp = "pc";
+        bech32_hrp = "steep";
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
@@ -144,6 +145,16 @@ public:
         checkpointData = {
             {
                 {0, uint256S("0x00000e902f9cea8a855ca2b02605a23eec18c8c76505251a08dddaa91cabdcd8")},
+                  {1, uint256S("0x000002ba7e2ee369dc51c682798d869a5b7c3e61700d9f0dc39d58b501dbf46e")},
+                    {2, uint256S("0x00000e9dd9b0d6f13c53bbf952e98cd61b2ba87ddb8fba7d02502355504d6426")},
+                      {20, uint256S("0x000001e58624b41beaa75cd146e5389bddd473dcd21099bcd1d380a7b9eebc5e")},
+                        {10000, uint256S("0x00000000006d5ccdbf23a8f3784fedda4cf7e2f0ae6a4d3da3b938a3da1e9a03")},
+                          {30000, uint256S("0x0000000000940ef181a9ceefaec9c861eea6270b014bcc7764689afc47001053")},
+                            {75000, uint256S("0x00000000001e99c10b04464e70e83cb48fcea999478801b3d7d051b2da40a40c")},
+                              {100000, uint256S("0x8c577e2f69f3fcb45a5bb79b642918b75f293b06337cd5ac3cb22d7f0b9856a8")},
+                                {125000, uint256S("0x000000000036eff3aee3e2235a1c8447d61fdbc57606b1d630f1cfaac3557919")},
+                                  {147500, uint256S("0xc0bd5acf41a95ae2c4e35bd7bb9cd6683611545adb8aaf686b413bc9a79d9ccc")},
+                                  {1000000, uint256S("0x6fc4bf03842cd58392beb5760029fbcfa5c069eecf54ab8f301dd5420365a63b")},
             }
         };
 
@@ -165,8 +176,10 @@ public:
         consensus.BIP16Height = 0;
         consensus.BIP34Height = 293368;
         consensus.BIP34Hash = uint256S("00000002c0b976c7a5c9878f1cec63fb4d88d68d614aedeaf8158c42d904795e");
-        consensus.powLimit =            uint256S("0000000fffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 28;
-        consensus.bnInitialHashTarget = uint256S("00000007ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 29;
+        consensus.powLimit =            uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 32;
+        consensus.posLimit =            uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 32;
+        consensus.bnInitialHashTarget = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ~arith_uint256(0) >> 40;
+
 
         consensus.nTargetTimespan = 7 * 24 * 60 * 60;  // one week
         consensus.nStakeTargetSpacing = 10 * 60;  // 10-minute block spacing
@@ -185,7 +198,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x00");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000000002e9e7b00e1f6dc5123a04aad68dd0f0968d8c7aa45f6640795c37b1"); //1135275
+        consensus.defaultAssumeValid = uint256S("0x000000000058f24b789cda338dd58ba6a4cbbd761769322307958f13f97784f3"); //1135275
 
         pchMessageStart[0] = 0xcb;
         pchMessageStart[1] = 0xf2;
@@ -195,18 +208,19 @@ public:
         nDefaultPort = 9903;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1345083810, 1345090000, 122894938, 0x1d0fffff, 1, 0);
+        genesis = CreateGenesisBlock(1506875865, 1506875865, 48585, 0x1e0fffff, 1, 0);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000001f757bb737f6596503e17cd17b0658ce630cc727c0cca81aec47c9f06"));
-        assert(genesis.hashMerkleRoot == uint256S("0x3c2d8f85fab4d17aac558cc648a1a58acff0de6deb890c29985690052c5993c2"));
-
+        assert(consensus.hashGenesisBlock == uint256S("0x00000e902f9cea8a855ca2b02605a23eec18c8c76505251a08dddaa91cabdcd8"));
+        assert(genesis.hashMerkleRoot == uint256S("0x23900140194a8df32c57b48c1a259e6c39596adf3499030877832cc79d55830a"));
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("tseed.peercoin.net");
-        vSeeds.emplace_back("tseed2.peercoin.net");
-        vSeeds.emplace_back("tseed.peercoin-library.org");
-        vSeeds.emplace_back("testseed.ppcoin.info");
+        vSeeds.emplace_back("45.156.22.16");
+        vSeeds.emplace_back("45.156.23.39");
+         vSeeds.emplace_back("91.239.69.78");
+         vSeeds.emplace_back("45.155.207.187");
+         vSeeds.emplace_back("37.235.144.35");
+         vSeeds.emplace_back("37.235.144.15");
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
@@ -215,7 +229,7 @@ public:
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
         // human readable prefix to bench32 address
-        bech32_hrp = "tpc";
+        bech32_hrp = "tsteep";
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
@@ -227,27 +241,17 @@ public:
 
         checkpointData = {
             {
-                {     0, uint256S("0x00000001f757bb737f6596503e17cd17b0658ce630cc727c0cca81aec47c9f06")},
-                { 19080, uint256S("0xb054d63d41852d71b611eaa8eca37d9fddca69b5013cf0966d453402ec8005ce")},
-                { 30583, uint256S("0x5179c0c496b5d25ab81ffe14273ea6928c6ff81c0a0d6a83b5d7d41d64886300")},
-                { 99999, uint256S("0xa7b03b14b8673683d972ab81775f3e85fea4fe689874b5956183466535dc651c")},
-                {219999, uint256S("0x0691bb86c92762c5c4c5a3723585ebeb7ec59310bbb0bdb6666551ab24ad919e")},
-                {336000, uint256S("0xf07adf61615c529f7c282b858d13d3e037b197324cb12e0669c461947494c4e3")},
-                {372751, uint256S("0x000000000000148db599b217c117b5104f5043c55f6ca2a8a065d9fab9f9bba1")},
-                {382019, uint256S("0x3ab75769d7957d9bf0857b5019d0a0e41044fa9ecf30b2f9c32aa457b0864ce5")},
-                {408500, uint256S("0x1636ac08b073d26b28fa40243d58dd5deb215752efe094c92c61998e4e9baf3f")},
-                {412691, uint256S("0x0e20318be88f07f521453435b37cfc516c3de07264a78ed7170985a1126126ab")},
-                {441667, uint256S("0x4636d75163248acd32c212bd1b17f556bdeb3f40316eef662f6736d1c529ae07")},
-                {444932, uint256S("0x000000003f7d1f4b55d529fdcf3983c3c8a969ab0900dee41bed0bdaf1c3a9d7")},
+                {     0, uint256S("0x00000e902f9cea8a855ca2b02605a23eec18c8c76505251a08dddaa91cabdcd8")},
+
             }
         };
 
         chainTxData = ChainTxData{
             // Data as of block 000000003f7d1f4b55d529fdcf3983c3c8a969ab0900dee41bed0bdaf1c3a9d7 (height 444932)
-            1588604853, // * UNIX timestamp of last known number of transactions
-            868816,     // * total number of transactions between genesis and that timestamp
+            0, // * UNIX timestamp of last known number of transactions
+            0,     // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)
-            0.003581633 // * estimated number of transactions per second after that timestamp
+            0 // * estimated number of transactions per second after that timestamp
                         // 868816/(1588604853-1346029522) = 0.003581633
         };
     }
