@@ -4249,8 +4249,8 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
     // The following split & combine thresholds are important to security
     // Should not be adjusted if you don't understand the consequences
-    static unsigned int nStakeSplitAge = (60 * 60 * 24 * 90);
-    int64_t nCombineThreshold = 100 * COIN;
+    static unsigned int nStakeSplitAge = (60 * 60 * 24 * 1);
+    int64_t nCombineThreshold = 1000 * COIN;
 
     CBigNum bnTargetPerCoinDay;
     bnTargetPerCoinDay.SetCompact(nBits);
