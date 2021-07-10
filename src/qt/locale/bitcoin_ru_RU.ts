@@ -595,7 +595,7 @@
     </message>
     <message>
         <source>About %1</source>
-        <translation>Около %1</translation>
+        <translation>О %1</translation>
     </message>
     <message>
         <source>Command-line options</source>
